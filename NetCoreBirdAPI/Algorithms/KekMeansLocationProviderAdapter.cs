@@ -48,7 +48,7 @@ namespace NetCoreBirdAPI.Algorithms
                         }
                         if (count < clustersInPartition)
                         {
-                            if (count > MIN_CLUSTERS_PER_PARTITION)
+                            if (count >= MIN_CLUSTERS_PER_PARTITION)
                             {
                                 clustersInPartition = count;
                             }

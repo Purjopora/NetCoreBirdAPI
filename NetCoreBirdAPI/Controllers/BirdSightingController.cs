@@ -81,5 +81,80 @@ namespace NetCoreBirdAPI.Controllers
         {
             return DbConnector.updateSightings();
         }
+
+        [HttpGet]
+        [Route("SpoofSightings")]
+        public bool SpoofSightings(int amount, string user, string bird)
+        {
+            Random rnd = new Random();
+            DateTime now = DateTime.Now;
+            List<Specie> species = GetSpecies();
+            List<Tower> towers = GetTowers();
+            List<BirdSighting> spoofed = new List<BirdSighting>();
+            for (int i = 0; i < amount; i++)
+            {
+                Tower spoofLatitude = towers[rnd.Next(towers.Count)];
+                Tower spoofLongitude = towers[rnd.Next(towers.Count)];
+                var sighting = new BirdSighting
+                {
+                    username = user,
+                    comment = "chiterboi",
+                    specie = bird,
+                    latitudecoord = spoofLatitude.getLatitude(),
+                    longitudecoord = spoofLongitude.getLongitude(),
+                    timestamp = now
+                };
+                spoofed.Add(sighting);
+            }
+            foreach (BirdSighting s in spoofed)
+            {
+                DbConnector.UpdateSightingsToDB(s);
+            }
+            return true;
+        }
+
+        private List<Specie> GetSpecies()
+        {
+            DataTable resultdt = DbConnector.GetSpeciesFromDB();
+            if (resultdt == null)
+            {
+                return null;
+            }
+            var SpecieList = new List<Specie>();
+            foreach (DataRow row in resultdt.Rows)
+            {
+                Specie specie = new Specie
+                {
+                    Id = row[0].ToString(), //TODO: fix to get items with row["id"] and row["speciename"]
+                    Speciename = row[1].ToString()
+                };
+                SpecieList.Add(specie);
+            }
+            return SpecieList;
+        }
+
+        private List<Tower> GetTowers()
+        {
+            DataTable resultdt = DbConnector.GetTowersFromDB(null);
+            if (resultdt == null)
+            {
+                return null;
+            }
+            var TowerList = new List<Tower>();
+            foreach (DataRow row in resultdt.Rows)
+            {
+                var tower = new Tower
+                {
+                    id = row["id"].ToString(),
+                    municipal = row["municipal"].ToString(),
+                    towername = row["towername"].ToString(),
+                    latitudecoord = row["latitudecoord"].ToString().Replace(",", "."),
+
+                    longitudecoord = row["longitudecoord"].ToString().Replace(",", ".")
+                };
+                TowerList.Add(tower);
+            }
+            return TowerList;
+        }
     }
 }

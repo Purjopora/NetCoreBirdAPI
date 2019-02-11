@@ -14,14 +14,13 @@ namespace NetCoreBirdAPI.Algorithms
         /// </summary>
         public static double[][] Cluster(double[][] data, int clusterAmount)
         {
-            if (clusterAmount > data.Length)
-            {
-                return data;
-            }
-
             if (clusterAmount < 2)
             {
                 clusterAmount = 2;
+            }
+            if (clusterAmount > data.Length)
+            {
+                return data;
             }
 
             bool clustersMoved = true;
