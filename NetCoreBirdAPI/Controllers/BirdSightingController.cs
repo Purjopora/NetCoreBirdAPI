@@ -52,5 +52,34 @@ namespace NetCoreBirdAPI.Controllers
 
         }
 
+        [HttpGet]
+        [Route("GetSightings/Bird")]
+        public IEnumerable<BirdSighting> GetSightingsForBird(string bird)
+        {
+            DataTable resultdt = DbConnector.GetSightingsForBird(bird);
+            var SightingList = new List<BirdSighting>();
+            foreach (DataRow row in resultdt.Rows)
+            {
+                var sighting = new BirdSighting
+                {
+                    username = "",
+                    specie = "",
+                    longitudecoord = Double.Parse(row["longtitude"].ToString()),
+                    latitudecoord = Double.Parse(row["latitude"].ToString()),
+                    comment = "",
+                    timestamp = DateTime.Now
+
+                };
+                SightingList.Add(sighting);
+            }
+            return SightingList;
+        }
+
+        [HttpGet]
+        [Route("UpdateSightings")]
+        public bool updateSightings()
+        {
+            return DbConnector.updateSightings();
+        }
     }
 }

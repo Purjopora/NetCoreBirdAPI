@@ -15,14 +15,14 @@ namespace NetCoreBirdAPI.Models
         public string longitudecoord { get; set; }
         public string latitudecoord { get; set; }
 
-        public double getX()
+        public double getLatitude()
         {
             return double.Parse(latitudecoord, System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public double getY()
+        public double getLongitude()
         {
-            return Convert.ToDouble(longitudecoord, System.Globalization.CultureInfo.InvariantCulture);
+            return double.Parse(longitudecoord, System.Globalization.CultureInfo.InvariantCulture);
         }
     }
 }

@@ -8,8 +8,8 @@ namespace NetCoreBirdAPI.Common
 {
     public interface LocationProvider
     {
-        double getX();
+        double getLatitude();
 
-        double getY();
+        double getLongitude();
     }
 }

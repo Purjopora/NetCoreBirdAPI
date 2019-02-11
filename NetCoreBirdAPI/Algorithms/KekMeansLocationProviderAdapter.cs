@@ -46,14 +46,22 @@ namespace NetCoreBirdAPI.Algorithms
                         {
                             clustersInPartition = MIN_CLUSTERS_PER_PARTITION;
                         }
-                        if (count > clustersInPartition)
+                        if (count < clustersInPartition)
                         {
-                            double[][] partitionClusters = KekMeans.Cluster(partitionedLocations[i][j], clustersInPartition);
-                            for (int k = 0; k < partitionClusters.Length; k++)
+                            if (count > MIN_CLUSTERS_PER_PARTITION)
                             {
-                                clusters[clusterIndex] = partitionClusters[k];
-                                clusterIndex++;
+                                clustersInPartition = count;
                             }
+                            else
+                            {
+                                continue;
+                            }
+                        }
+                        double[][] partitionClusters = KekMeans.Cluster(partitionedLocations[i][j], clustersInPartition);
+                        for (int k = 0; k < partitionClusters.Length; k++)
+                        {
+                            clusters[clusterIndex] = partitionClusters[k];
+                            clusterIndex++;
                         }
                     }
                 }
@@ -81,9 +89,9 @@ namespace NetCoreBirdAPI.Algorithms
                     List<LocationProvider> partitionLocations = new List<LocationProvider>();
                     foreach (LocationProvider loc in locations)
                     {
-                        if (loc.getX() > START_PARTITION_LAT + i * PARTITIONS_SIZE_LAT && loc.getX() < START_PARTITION_LAT + (i + 1) * PARTITIONS_SIZE_LAT)
+                        if (loc.getLatitude() > START_PARTITION_LAT + i * PARTITIONS_SIZE_LAT && loc.getLatitude() < START_PARTITION_LAT + (i + 1) * PARTITIONS_SIZE_LAT)
                         {
-                            if (loc.getY() > START_PARTITION_LONG + j * PARTITIONS_SIZE_LONG && loc.getY() < START_PARTITION_LONG + (j + 1) * PARTITIONS_SIZE_LONG)
+                            if (loc.getLongitude() > START_PARTITION_LONG + j * PARTITIONS_SIZE_LONG && loc.getLongitude() < START_PARTITION_LONG + (j + 1) * PARTITIONS_SIZE_LONG)
                             {
                                 partitionLocations.Add(loc);
                             }
@@ -101,8 +109,8 @@ namespace NetCoreBirdAPI.Algorithms
             for (int i = 0; i < locations.Count; i++)
             {
                 double[] location = new double[2];
-                location[0] = locations[i].getX();
-                location[1] = locations[i].getY();
+                location[0] = locations[i].getLatitude();
+                location[1] = locations[i].getLongitude();
                 result[i] = location;
             }
             return result;
