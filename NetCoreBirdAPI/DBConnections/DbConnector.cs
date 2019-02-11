@@ -271,6 +271,7 @@ namespace NetCoreBirdAPI.DBConnections
         public static DataTable GetSightingsForBird(string bird)
         {
             DataTable dt = new DataTable();
+            bird = bird.Replace("-", "");
             string query = "SELECT * FROM testdb.bird" + bird + ";";
             return executeQuery(query);
         }
